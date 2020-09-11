@@ -1,0 +1,12 @@
+
+
+.data{
+    text-align: center; z-index: 999; 
+    width: 200px;height: 500px;
+    border-radius: 10px;
+    box-shadow: 0 0 10 10 black;
+    position: absolute;
+    top: 100px;
+    right: 20px; 
+    background: rgba(255, 254, 254, 0.705);
+}

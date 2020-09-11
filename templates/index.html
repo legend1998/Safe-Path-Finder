@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+  <title>Document</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/cluster">Cluster wise area</a>
+        </li>
+      </ul>
+    </div>
+  </nav> 
+
+  {% block content %}
+
+  {% if data %}
+  <div class="data"> 
+    <br>
+    <div>
+      <label for="threshold">threshold</label>
+    <h1 name='threshold'> {{data['threshold']}}% </h1>
+    </div>
+    <div>
+      <label for="cost">Cost</label>
+    <h1 name='cost'> {{data['cost']}} </h1>
+    </div>
+    <div>
+      <label for="mean">Average</label>
+    <h2> {{data['mean']}} </h2>
+    </div>
+    <div>
+      <label for="std_dev">Std daviation</label>
+    <h2> {{data['std_dev']}} </h2>
+    </div>
+    <br><br>
+    <div>
+    <h5>Red :  block Area (more crime)</h5>
+    </div>
+    <div>
+    <h5> white: less crime area  </h5>
+    </div>
+  
+  </div>
+  {% endif %}
+
+  {% include "out.html" %}
+
+  <div class="container row">
+    <div class="col">  
+      <img src="{{url_for('static',filename='foo.png')}}" alt="">
+      <h3 class="text-center">crime rate with different color</h3>
+    </div>
+    <div class="col">
+      <img src="{{url_for('static',filename='base.png')}}" alt="">
+      <h3 class="text-center"> grid with threshold value  </h3>
+    </div>
+  </div>
+  {% endblock %}
+
+</body>
+
+</html>

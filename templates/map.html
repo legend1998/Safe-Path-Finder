@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>Quick Start - Leaflet</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+    </style>
+	
+</head>
+<body>
+
+
+<div class="container ">
+    <form class="form text-center" action="" method="POST">
+    {{form.hidden_tag()}}
+            <table style="text-align: center;">
+                <tr>
+                    <td>
+                        {{ form.source.label }}
+                          {{ form.source(class_="form-control") }}
+                          {% for error in form.source.errors %}
+                              <span style="color: red;">{{ error }}</span>
+                              {% endfor %}</td>
+                    <td>
+                        {{ form.destination.label }}
+                        {{ form.destination(class_="form-control") }}
+                        {% for error in form.destination.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                        {% endfor %}</td>
+                        <td><label for="grid_size">grid Size (6-20)</label>
+                            <span id="show">10</span>
+                            <input class="btn btn-primary form-control" id="slider" name='grid_size' type="range" min=6 max="20" step=2 value=10 onchange="gridValue()" > </td>
+
+                        <td><label for="threshold">threshold</label>
+                            <input class="form-control" type="number" max=100 min=50 value="75" name='threshold'> </td>
+                        <td><input class="btn btn-primary form-control" type="submit" value="get path"></td>
+
+                        <td><input class="btn btn-primary form-control" onclick="reset()" type="reset"></td>
+                </tr>
+            </table>
+            
+        </form>
+</div>
+    <p class="text-center alert alert-primary">plese Mark point inside box</p>
+
+        {% with message  = get_flashed_messages()  %}
+          {% if message %}
+          <p class="alert alert-danger text-center">{{message[0]}}</p>
+          {% endif %}
+        {% endwith %}
+<div id="mapid" style=" height: 500px;"></div>
+
+<script>
+    function gridValue(){
+        var x=document.getElementById("slider")
+        var show= document.getElementById("show")
+        show.innerText=x.value
+    }
+
+    var i=0;
+    function reset(){
+    src=document.getElementById('source');
+    dest=document.getElementById('destination');
+    src.value='';
+    dest.value='';
+    i=0;
+    }
+	var mymap = L.map('mapid').setView([45.51,-73.57], 13);
+
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+    var bounds = [[45.53, -73.59], [45.49, -73.55]];     
+    var rectangle = L.rectangle(bounds).addTo(mymap);
+
+var popup = L.popup();
+
+
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+    var marker = L.marker(e.latlng).addTo(mymap);
+    src=document.getElementById('source');
+    dest=document.getElementById('destination');
+    if(i==0)src.value=e.latlng
+    if(i==1)dest.value=e.latlng
+    console.log(src,dest,i);
+    i++;
+    if(i==2)i=0;
+}
+mymap.on('click', onMapClick);
+</script>
+</body>
+</html>
+
+
